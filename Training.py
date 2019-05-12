@@ -1,4 +1,5 @@
 import os
+import pickle
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -85,6 +86,8 @@ def train(save_images_dir):
 
     testing_noise = torch.randn(64, num_input, 1, 1, device=device)
 
+    torch.save(testing_noise, 'noise.pth')
+
     disc_optim = optim.Adam(disc.parameters(), lr=lr, betas=(beta1, 0.999))
     gen_optim = optim.Adam(gen.parameters(), lr=lr, betas=(beta1, 0.999))
 
@@ -101,6 +104,9 @@ def train(save_images_dir):
     )
 
     iteration = 0
+
+    g_losses = []
+    d_losses = []
 
     for epoch in range(num_epochs):
         # For each batch in the dataloader
@@ -151,10 +157,21 @@ def train(save_images_dir):
                             'iteration_{}.png'.format(iteration),
                             "Generated images, iteration: {}".format(iteration))
 
+                g_losses.append(errG.item())
+                d_losses.append(errD.item())
+
             iteration += 1
 
     torch.save(disc.state_dict(), 'discriminator.pth')
     torch.save(gen.state_dict(), 'generator.pth')
+
+    with open('generator_loss', 'wb') as fp:
+        pickle.dump(g_losses, fp)
+
+    with open('discriminator_loss', 'wb') as fp:
+        pickle.dump(d_losses, fp)
+
+
 
 
 if __name__ == '__main__':
