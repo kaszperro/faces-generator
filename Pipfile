@@ -10,6 +10,7 @@ requests = "*"
 torch = "*"
 torchvision = "*"
 matplotlib = "*"
+imageio = "*"
 
 [requires]
 python_version = "3.7"
