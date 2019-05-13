@@ -18,7 +18,7 @@ class App:
         self.generate_noise()
 
         image = generate_image_from_vector(self.noise)
-        f = Figure(figsize=(5, 5), dpi=100)
+        f = Figure(figsize=(3, 3), dpi=100)
         a = f.add_subplot(111)
         self.face_image = a.imshow(image)
         self.canvas = FigureCanvasTkAgg(f, self.root)

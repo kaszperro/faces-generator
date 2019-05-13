@@ -65,6 +65,6 @@ class Discriminator(nn.Module):
 def get_generator_from_file(file_path):
     num_input = 100
     device = torch.device("cuda:0" if (torch.cuda.is_available()) else "cpu")
-    gen = Generator(num_input=num_input).to(device)
-    gen.load_state_dict(torch.load(file_path))
+    gen = Generator(num_input=num_input, ).to(device)
+    gen.load_state_dict(torch.load(file_path, map_location='cpu'))
     return gen.eval()

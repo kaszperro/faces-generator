@@ -18,7 +18,9 @@ def generate_image_from_vector(input_vector, model_path='./trained/generator.pth
 
     out_image = generator(noise).detach().cpu()[0]
 
-    return np.transpose(out_image, (1, 2, 0))
+    out_image = np.transpose(out_image, (1, 2, 0))
+
+    return out_image * 0.5 + 0.5  # undo normalization
 
 
 def display_random_image(model_path='./trained/generator.pth'):
