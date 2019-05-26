@@ -26,8 +26,13 @@ class CelebaDataset(Dataset):
             with zipfile.ZipFile(zip_file, "r") as zip_ref:
                 zip_ref.extractall(dataset_folder)
 
-    def __init__(self, dataset_folder: str, download=True, transform=None):
-        self.transform = transform
+    def __init__(self, dataset_folder: str, download=True, image_size=64):
+        self.transform = transforms.Compose([
+            transforms.Resize(image_size),
+            transforms.CenterCrop(image_size),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        ])
         self.dataset_folder = dataset_folder
         if download:
             self.download_celeba_dataset(self.dataset_folder)
@@ -59,15 +64,8 @@ class CelebaDataset(Dataset):
 
 
 def display_random_images(dataset_path='./dataset'):
-    image_size = 64
-
     dataloader = DataLoader(
-        CelebaDataset(dataset_path, transform=transforms.Compose([
-            transforms.Resize(image_size),
-            transforms.CenterCrop(image_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        ])),
+        CelebaDataset(dataset_path),
         batch_size=64,
         shuffle=True,
         num_workers=2
@@ -84,4 +82,5 @@ def display_random_images(dataset_path='./dataset'):
 
 
 if __name__ == '__main__':
-    display_random_images('./dataset')
+    pass
+    # display_random_images('./dataset')

@@ -11,6 +11,7 @@ from Evaluation import generate_image_from_vector
 class App:
     def __init__(self, num_sliders):
         self.root = tk.Tk()
+        self.root.title("faces generator")
         self.num_sliders = num_sliders
         self.slider_values = np.random.rand(self.num_sliders)
         self.generate_sliders()

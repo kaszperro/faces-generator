@@ -1,3 +1,5 @@
+# import urllib.request
+
 import requests
 
 
@@ -29,4 +31,10 @@ def download_file_from_google_drive(file_id, save_path):
         params = {'id': file_id, 'confirm': token}
         response = session.get(url, params=params, stream=True)
 
+    save_response_to_file(response, save_path)
+
+
+def download_file_from_url(url, save_path):
+    session = requests.Session()
+    response = session.get(url, stream=True)
     save_response_to_file(response, save_path)

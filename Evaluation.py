@@ -5,7 +5,7 @@ import torch
 from Models import get_generator_from_file
 
 
-def generate_image_from_vector(input_vector, model_path='./trained/generator.pth'):
+def generate_image_from_vector(input_vector, model_path='./trained/flowers/generator.pth'):
     """
 
     :param model_path: path to model
@@ -23,7 +23,7 @@ def generate_image_from_vector(input_vector, model_path='./trained/generator.pth
     return out_image * 0.5 + 0.5  # undo normalization
 
 
-def display_random_image(model_path='./trained/generator.pth'):
+def display_random_image(model_path='./trained/flowers/generator.pth'):
     noise = np.random.rand(100)
 
     out_image = generate_image_from_vector(noise, model_path)

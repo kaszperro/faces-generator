@@ -6,9 +6,9 @@ import numpy as np
 import torch
 from torch import nn, optim
 from torch.utils.data import DataLoader
-from torchvision import utils, transforms
+from torchvision import utils
 
-from FacesDataset import CelebaDataset
+from FlowersDataset import FlowersDataset
 from Models import Generator, Discriminator
 
 
@@ -64,7 +64,10 @@ def save_images(generator, noise, directory, file_name, title):
     plt.savefig(os.path.join(directory, file_name))
 
 
-def train(save_images_dir):
+def train(dataset, save_path, num_epochs=5):
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
     # parameters
     num_gpu = 1
     num_input = 100
@@ -72,7 +75,7 @@ def train(save_images_dir):
     fake_label = 0
     lr = 0.0002
     beta1 = 0.5
-    num_epochs = 5
+
     image_size = 64
     batch_size = 64
     # -----
@@ -86,18 +89,13 @@ def train(save_images_dir):
 
     testing_noise = torch.randn(64, num_input, 1, 1, device=device)
 
-    torch.save(testing_noise, 'noise.pth')
+    torch.save(testing_noise, os.path.join(save_path, 'noise.pth'))
 
     disc_optim = optim.Adam(disc.parameters(), lr=lr, betas=(beta1, 0.999))
     gen_optim = optim.Adam(gen.parameters(), lr=lr, betas=(beta1, 0.999))
 
     data_loader = DataLoader(
-        CelebaDataset('./dataset', transform=transforms.Compose([
-            transforms.Resize(image_size),
-            transforms.CenterCrop(image_size),
-            transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        ])),
+        dataset,
         batch_size=batch_size,
         shuffle=True,
         num_workers=2
@@ -152,8 +150,8 @@ def train(save_images_dir):
             # Update G
             gen_optim.step()
 
-            if i % 100 == 0:
-                save_images(gen, testing_noise, save_images_dir,
+            if iteration % 100 == 0:
+                save_images(gen, testing_noise, os.path.join(save_path, 'generated'),
                             'iteration_{}.png'.format(iteration),
                             "Generated images, iteration: {}".format(iteration))
 
@@ -162,8 +160,8 @@ def train(save_images_dir):
 
             iteration += 1
 
-    torch.save(disc.state_dict(), 'discriminator.pth')
-    torch.save(gen.state_dict(), 'generator.pth')
+    torch.save(disc.state_dict(), os.path.join(save_path, 'discriminator.pth'))
+    torch.save(gen.state_dict(), os.path.join(save_path, 'generator.pth'))
 
     with open('generator_loss', 'wb') as fp:
         pickle.dump(g_losses, fp)
@@ -172,7 +170,9 @@ def train(save_images_dir):
         pickle.dump(d_losses, fp)
 
 
+def train_flowers():
+    train(FlowersDataset(), os.path.join('trained', 'flowers'), 40)
 
 
 if __name__ == '__main__':
-    train('./generated/')
+    train_flowers()
