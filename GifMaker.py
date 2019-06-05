@@ -5,7 +5,7 @@ import re
 import imageio
 
 
-def make_gif(gif_name='gen.gif', images_path='./trained/generated'):
+def make_gif(gif_name='gen.gif', images_path='./trained/faces/generated'):
     images_list = glob.glob(images_path + '/*.png')
     images_list.sort(key=lambda var: [int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
     gif = []
