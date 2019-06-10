@@ -11,6 +11,8 @@ torch = "*"
 torchvision = "*"
 matplotlib = "*"
 imageio = "*"
+opencv-python = "*"
+scikit-image = "*"
 
 [requires]
 python_version = "3.7"

@@ -5,7 +5,7 @@ import torch
 from Models import get_generator_from_file
 
 
-def generate_image_from_vector(input_vector, model_path='./trained/flowers/generator.pth'):
+def generate_image_from_vector(input_vector, model_path='./trained/faces/generator.pth'):
     """
 
     :param model_path: path to model
@@ -16,14 +16,14 @@ def generate_image_from_vector(input_vector, model_path='./trained/flowers/gener
 
     noise = torch.tensor(input_vector, dtype=torch.float32).unsqueeze(0).unsqueeze(2).unsqueeze(2)
 
-    out_image = generator(noise).detach().cpu()[0]
+    out_image = generator(noise).detach().cpu()[0].numpy()
 
     out_image = np.transpose(out_image, (1, 2, 0))
 
     return out_image * 0.5 + 0.5  # undo normalization
 
 
-def display_random_image(model_path='./trained/flowers/generator.pth'):
+def display_random_image(model_path='./trained/faces/generator.pth'):
     noise = np.random.rand(100)
 
     out_image = generate_image_from_vector(noise, model_path)
