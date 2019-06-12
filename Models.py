@@ -62,9 +62,27 @@ class Discriminator(nn.Module):
         return self.main(input)
 
 
+def stat_model_parameters(model):
+    print(model)
+    print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+
+
+def stat_generator_parameters():
+    stat_model_parameters(Generator())
+
+
+def stat_discriminator_parameters():
+    stat_model_parameters(Discriminator())
+
+
 def get_generator_from_file(file_path):
     num_input = 100
     device = torch.device("cuda:0" if (torch.cuda.is_available()) else "cpu")
     gen = Generator(num_input=num_input, ).to(device)
     gen.load_state_dict(torch.load(file_path, map_location='cpu'))
     return gen.eval()
+
+
+if __name__ == '__main__':
+    stat_generator_parameters()
+    stat_discriminator_parameters()

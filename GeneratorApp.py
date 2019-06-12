@@ -10,7 +10,6 @@ from Evaluation import generate_image_from_vector
 
 
 class App:
-
     choices = ['Faces', 'Flowers']
     model_path = './trained/faces/generator.pth'
 
@@ -29,7 +28,6 @@ class App:
         self.face_image = a.imshow(image)
         self.canvas = FigureCanvasTkAgg(f, self.root)
         self.canvas.get_tk_widget().grid(row=0, column=1, rowspan=num_sliders)
-
 
         self.model_menu()
         self.generate_image()
@@ -71,7 +69,7 @@ class App:
         self.option_menu.grid(row=0, column=0)
         self.option_menu.set(self.choices[0])
         self.option_menu.bind('<<ComboboxSelected>>', self.menu_handler)
-        self.option_menu.pack
+        # self.option_menu.pack
         self.option_menu.mainloop()
 
     def change_model(self, type):
