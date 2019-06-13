@@ -91,15 +91,16 @@ def comparer(to_compare="search/dziekan-gajecki.jpg"):
             bv = (bv + 1) % 5
 
 def show_best():
-    best = cv2.imread("search/best.jpg")
-    min_mse = cv2.imread("search/min_mse.jpg")
-    max_ssim = cv2.imread("search/max_ssim.jpg")
+    original = cv2.imread("search/dziekan-gajecki.jpg")
+    best = cv2.imread("search/img/bestvalues0.jpg")
+    min_mse = cv2.imread("search/img/min_mse0.jpg")
+    max_ssim = cv2.imread("search/img/max_ssim0.jpg")
     fig = plt.figure("Images")
 
-    images = ("Best", best), ("Min MSE", min_mse), ("Max SSIM", max_ssim)
+    images = ("Original", original), ("Max SSIM", max_ssim), ("Both values", best), ("Min MSE", min_mse)
 
     for (i, (name, image)) in enumerate(images):
-        ax = fig.add_subplot(1, 3, i + 1)
+        ax = fig.add_subplot(1, 4, i + 1)
         ax.set_title(name)
         plt.imshow(image)
         plt.axis("off")
