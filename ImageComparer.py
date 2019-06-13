@@ -1,10 +1,12 @@
-import cv2
 import sys
+
+import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-
 from skimage.measure import _structural_similarity as ssim
+
 from Evaluation import generate_image_from_vector
+
 
 def mse(imageA, imageB):
     err = np.sum((imageA.astype("float")[:, :, None] - imageB.astype("float")) ** 2)
@@ -12,26 +14,28 @@ def mse(imageA, imageB):
 
     return err
 
+
 def compare_images(imageA, imageB, title):
     m = mse(imageA, imageB)
     s = ssim.compare_ssim(imageA, imageB)
 
     return [m, s]
 
+
 def comparer(to_compare="search/dziekan-gajecki.jpg"):
     original = cv2.imread(to_compare)
     original = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
     best_values = [sys.maxsize, 0, "img", "data"]
-    best_values = [best_values]*5
+    best_values = [best_values] * 5
     min_mse = [sys.maxsize, "img", "data"]
-    min_mse = [min_mse]*5
+    min_mse = [min_mse] * 5
     max_ssim = [0, "img", "data"]
-    max_ssim = [max_ssim]*5
+    max_ssim = [max_ssim] * 5
     bv = 0
     mm = 0
     ms = 0
 
-    while(1):
+    while (1):
         vector = np.random.rand(100)
         generated = generate_image_from_vector(vector) * 255
 
@@ -89,6 +93,7 @@ def comparer(to_compare="search/dziekan-gajecki.jpg"):
 
             print("Found better MSE: %.2f, SSIM: %.2f" % (best_values[bv][0], best_values[bv][1]))
             bv = (bv + 1) % 5
+
 
 def show_best():
     original = cv2.imread("search/dziekan-gajecki.jpg")
