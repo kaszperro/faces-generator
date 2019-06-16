@@ -9,42 +9,57 @@ from Evaluation import generate_image_from_vector
 
 
 def mse(imageA, imageB):
+    # the 'Mean Squared Error' between the two images is the sum of the squared difference between the two images;
+    # WARNING: the two images must have the same dimension
     err = np.sum((imageA.astype("float")[:, :, None] - imageB.astype("float")) ** 2)
     err /= float(imageA.shape[0] * imageA.shape[1])
 
+    # return the MSE, the lower the error, the more "similar" the two images are
     return err
 
 
-def compare_images(imageA, imageB, title):
+def compare_images(imageA, imageB):
+    # compare image using Mean Squared Error & Structural Similarity Measure
     m = mse(imageA, imageB)
     s = ssim.compare_ssim(imageA, imageB)
 
+    # return both results as list
     return [m, s]
 
 
-def comparer(to_compare="search/dziekan-gajecki.jpg"):
+def comparer(to_compare="search/dziekan-gajecki.jpg", generator="./trained/faces/generator.pth"):
+    # infinite function searching image as similar to "to_compare" possible
+    # WARNING: overwrites last search
     original = cv2.imread(to_compare)
+    # Using greyscale for easier searching
     original = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+
+    # structure for storing results
     best_values = [sys.maxsize, 0, "img", "data"]
     best_values = [best_values] * 5
     min_mse = [sys.maxsize, "img", "data"]
     min_mse = [min_mse] * 5
     max_ssim = [0, "img", "data"]
     max_ssim = [max_ssim] * 5
+
+    # non-pythonical indexes for iteration of lists - optimalization for editing results
     bv = 0
     mm = 0
     ms = 0
 
     while (1):
+        # generate random image for comparison
         vector = np.random.rand(100)
-        generated = generate_image_from_vector(vector) * 255
+        # mapping
+        generated = generate_image_from_vector(vector, generator) * 255
 
         cv2.imwrite("search/generatedtmp.jpg", generated)
         generated_img = cv2.imread("search/generatedtmp.jpg")
         generated_gray = cv2.cvtColor(generated_img, cv2.COLOR_BGR2GRAY)
 
-        values = compare_images(original, generated_gray, "Original vs Generated")
+        values = compare_images(original, generated_gray)
 
+        # save five best images with minimal MSE
         if values[0] < min_mse[mm][0]:
             name_mm = "search/img/min_mse{}.jpg".format(mm)
             data_mm = "search/data/min_mse{}.txt".format(mm)
@@ -61,6 +76,7 @@ def comparer(to_compare="search/dziekan-gajecki.jpg"):
             print("Found better MSE: %.2f" % (min_mse[mm][0]))
             mm = (mm + 1) % 5
 
+        # save five best images with maximal SSIM
         if values[1] > max_ssim[ms][0]:
             name_ms = "search/img/max_ssim{}.jpg".format(ms)
             data_ms = "search/data/max_ssim{}.txt".format(ms)
@@ -77,6 +93,7 @@ def comparer(to_compare="search/dziekan-gajecki.jpg"):
             print("Found better SSIM: %.2f" % (max_ssim[ms][0]))
             ms = (ms + 1) % 5
 
+        # save five best images with both parameters as good as possible
         if values[0] < best_values[bv][0] and values[1] > best_values[bv][1]:
             name_bv = "search/img/bestvalues{}.jpg".format(bv)
             data_bv = "search/data/bestvalues{}.txt".format(bv)
@@ -95,8 +112,9 @@ def comparer(to_compare="search/dziekan-gajecki.jpg"):
             bv = (bv + 1) % 5
 
 
-def show_best():
-    original = cv2.imread("search/dziekan-gajecki.jpg")
+def show_best(original_img="search/dziekan-gajecki.jpg"):
+    # show comparison of original image with found one (with index 0)
+    original = cv2.imread(original_img)
     best = cv2.imread("search/img/bestvalues0.jpg")
     min_mse = cv2.imread("search/img/min_mse0.jpg")
     max_ssim = cv2.imread("search/img/max_ssim0.jpg")
@@ -111,3 +129,70 @@ def show_best():
         plt.axis("off")
 
     plt.show()
+
+def menu_search():
+    print_generator_menu()
+    choice = input("Choose generator [1-2]: ")
+    generator = make_generator_choise(int(choice))
+
+    image_path = input("Give path to image for comparison [leave empty for default]: ")
+    if not image_path:
+        image_path = "search/dziekan-gajecki.jpg"
+
+    print("Starting searching!")
+    comparer(image_path, generator)
+
+def menu_show():
+    image_path = input("Give path to image for comparison [leave empty for default]: ")
+
+    if not image_path:
+        image_path = "search/dziekan-gajecki.jpg"
+
+    show_best(image_path)
+
+def make_generator_choise(number):
+    if number == 1:
+        return "./trained/faces/generator.pth"
+    elif number == 2:
+        return "./trained/flowers/generator.pth"
+    else:
+        print("\nInvalid number. Try again:\n")
+        menu_search()
+
+def print_generator_menu():
+    print(30 * '-')
+    print("1. Faces")
+    print("2. Flowers")
+    print(30 * '-')
+
+def make_main_choice(number):
+    if number == 1:
+        menu_search()
+    elif number == 2:
+        menu_show()
+    elif number == 3:
+        quit()
+    else:
+        print("\nInvalid number. Try again:\n")
+        main()
+
+    print("Done!")
+    quit()
+
+def print_main_menu():
+    print(30 * '-')
+    print("CHOOSE ONE")
+    print(30 * '-')
+    print("1. Search for similar image")
+    print("2. Show latest results")
+    print("3. Quit")
+    print(30 * '-')
+
+def main():
+    print_main_menu()
+
+    choice = input('Enter your choice [1-3]: ')
+    make_main_choice(int(choice))
+
+if __name__ == "__main__":
+    main()
