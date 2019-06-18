@@ -39,6 +39,8 @@ Tutaj także dodaliśmy do obsługi proste menu konsolowe:
 pipenv run python3 ImageComparer.py
 ```
 
+**UWAGA - Ostatnie wyniki wyszukiwania zostaną nadpisane jeśli uruchomimy wyszukiwanie**
+
 Pod ścieżką "./search/" znajdują się pliki powiązane z tym modułem:
 
 * "./search/data" - Zawiera pliki tekstowe powiązane z zapisanymi obrazami, w których znajduje się wektor użyty do generacji oraz parametry MSE i SSIM

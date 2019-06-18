@@ -47,6 +47,8 @@ We are able to search for similar images using this module and view results comp
 pipenv run python3 ImageComparer.py
 ```
 
+**WARNING - Last results will be overwritten after running searching module again**
+
 Everything connected with this module is under folder "./search/":
 
 * "./search/data" - Data about found images (vector used to generate, parameters of MSE and SSIM)
