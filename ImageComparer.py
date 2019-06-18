@@ -112,12 +112,12 @@ def comparer(to_compare="search/dziekan-gajecki.jpg", generator="./trained/faces
             bv = (bv + 1) % 5
 
 
-def show_best(original_img="search/dziekan-gajecki.jpg"):
+def show_best(original_img="search/dziekan-gajecki.jpg", index=0):
     # show comparison of original image with found one (with index 0)
     original = cv2.imread(original_img)
-    best = cv2.imread("search/img/bestvalues0.jpg")
-    min_mse = cv2.imread("search/img/min_mse0.jpg")
-    max_ssim = cv2.imread("search/img/max_ssim0.jpg")
+    best = cv2.imread("search/img/bestvalues{}.jpg".format(index))
+    min_mse = cv2.imread("search/img/min_mse{}.jpg".format(index))
+    max_ssim = cv2.imread("search/img/max_ssim{}.jpg".format(index))
     fig = plt.figure("Images")
 
     images = ("Original", original), ("Max SSIM", max_ssim), ("Both values", best), ("Min MSE", min_mse)
@@ -148,7 +148,13 @@ def menu_show():
     if not image_path:
         image_path = "search/dziekan-gajecki.jpg"
 
-    show_best(image_path)
+    index = input("Give index of saved images (default is 0) [0-4]: ")
+
+    if int(index) > 4 or int(index) < 0:
+        print("Wrong input, using index 0")
+        show_best(image_path, 0)
+    else:
+        show_best(image_path, index)
 
 def make_generator_choise(number):
     if number == 1:
