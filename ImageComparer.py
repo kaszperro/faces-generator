@@ -150,6 +150,9 @@ def menu_show():
 
     index = input("Give index of saved images (default is 0) [0-4]: ")
 
+    if not index:
+        index = 0
+
     if int(index) > 4 or int(index) < 0:
         print("Wrong input, using index 0")
         show_best(image_path, 0)
