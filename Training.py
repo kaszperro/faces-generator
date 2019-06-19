@@ -8,6 +8,7 @@ from torch import nn, optim
 from torch.utils.data import DataLoader
 from torchvision import utils
 
+import FacesDataset
 from FlowersDataset import FlowersDataset
 from Models import Generator, Discriminator
 
@@ -65,6 +66,7 @@ def save_images(generator, noise, directory, file_name, title):
 
 
 def train(dataset, save_path, num_epochs=5):
+    # main train function
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
@@ -151,6 +153,7 @@ def train(dataset, save_path, num_epochs=5):
             gen_optim.step()
 
             if iteration % 100 == 0:
+                # saves generated images after each 100 iterations, we can see progress
                 save_images(gen, testing_noise, os.path.join(save_path, 'generated'),
                             'iteration_{}.png'.format(iteration),
                             "Generated images, iteration: {}".format(iteration))
@@ -159,7 +162,8 @@ def train(dataset, save_path, num_epochs=5):
                 d_losses.append(errD.item())
 
             iteration += 1
-
+    # after we finish trainings, we also save
+    # generator and discriminator models, to restore them later
     torch.save(disc.state_dict(), os.path.join(save_path, 'discriminator.pth'))
     torch.save(gen.state_dict(), os.path.join(save_path, 'generator.pth'))
 
@@ -171,8 +175,15 @@ def train(dataset, save_path, num_epochs=5):
 
 
 def train_flowers():
+    # we use same function for faces and flowers
     train(FlowersDataset(), os.path.join('trained', 'flowers'), 40)
+
+
+def train_faces():
+    # we use same function for faces and flowers
+    train(FacesDataset.CelebaDataset('./dataset/'), os.path.join('trained', 'faces'), 10)
 
 
 if __name__ == '__main__':
     train_flowers()
+    # train_faces()

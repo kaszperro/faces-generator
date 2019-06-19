@@ -1,6 +1,7 @@
 # Faces & Flowers Generator
 
-Aplikacja generująca twarze i kwiatki używając DCGAN. Można tego użyć do tworzenia nieprawdziwych profili w internecie (w celach oszustw), lub patrząc bardziej przyszłościowo - generować nowe twarze w kinematografii, odtwarzać starszych aktorów.
+Aplikacja generująca twarze i kwiatki używając DCGAN. 
+Można tego użyć do tworzenia nieprawdziwych profili w internecie (w celach oszustw), lub patrząc bardziej przyszłościowo - generować nowe twarze w kinematografii, odtwarzać starszych aktorów. Oprócz tego, można powiedzieć, że zbiór kilku GB danych udało się dzięki temu skompresować do ~kilku kB. 
 
 ## Pierwsze kroki
 
@@ -10,6 +11,14 @@ Przed uruchomieniem aplikacji wymagane jest zainstalowanie wszystkich zależnoś
 pipenv install
 ```
 
+Alternatywnie, jeśli nie korzystamy z pipenv, wszystkie potrzebne biblioteki 
+znajdują się w pliku `requirements.txt`. Np jeśli używamy pip'a, wystarczy napisać:
+
+```
+pip3 install -r requirements.txt
+```
+Zainstalowane zostaną wtedy wszystkie zależności z pliku requirements.txt
+
 ## Instrukcja obsługi
 
 Aby otworzyć główną aplikację w której wyświetlają się nam generowane obrazy w zależności od wprowadzonych parametrów wystarczy użyć komendy:
@@ -17,6 +26,12 @@ Aby otworzyć główną aplikację w której wyświetlają się nam generowane o
 ```
 pipenv run python3 GeneratorApp.py
 ```
+
+Lub jeśli zainstalowaliśmy potrzebne biblioteki przez zwykłego pip'a:
+```
+python3 GeneratorApp.py 
+```
+
 
 ### Dodatkowe moduły
 
@@ -29,6 +44,11 @@ W celu ich generacji napisaliśmy zautomatyzowany skrypt, do którego obsługi d
 pipenv run python3 GifMaker.py
 ```
 
+Jeśli zainstalowaliśmy biblioteki zwykłym pip'em:
+```
+python3 GifMaker.py
+```
+
 #### ImageComparer
 
 Dodaliśmy możliwość wyszukiwania podobnego obrazu (twarzy/kwiatka) w wygenerowanych obrazach bazując na MSE (Mean Squared Error - Błąd średniokwadratowy) i SSIM (Structural Similarity Index). Zapisujemy łącznie 15 ostatnio odnalezionych obrazów (5 najlepszych MSE, 5 najlepszych SSIM i 5 najlepszych połączeń obu tych parametrów).
@@ -37,6 +57,12 @@ Tutaj także dodaliśmy do obsługi proste menu konsolowe:
 
 ```
 pipenv run python3 ImageComparer.py
+```
+
+Jeśli zainstalowaliśmy biblioteki zwykłym pip'em:
+
+```
+python3 ImageComparer.py
 ```
 
 **UWAGA - Ostatnie wyniki wyszukiwania zostaną nadpisane jeśli uruchomimy wyszukiwanie**

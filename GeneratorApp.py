@@ -10,6 +10,9 @@ from Evaluation import generate_image_from_vector
 
 
 class App:
+    """
+    It's class responsible for displaying trained models in user friendly way
+    """
     choices = ['Faces', 'Flowers']
     model_path = './trained/faces/generator.pth'
 
